@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Problema de Optimización Lineal</title>
+    <link rel="stylesheet" href="miestilo.css">
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [['$','$'], ['\\(','\\)']],
+          processEscapes: true
+        }
+      });
+      MathJax.Hub.Config({
+        TeX: {
+          Macros: {
+            R: "{\\mathbb R}",
+            N: "{\\mathbb N}",
+            Z: "{\\mathbb Z}",
+            bold: ["{\\bf #1}",1]
+          }
+        }
+      });
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+      TeX: {
+        extensions: ["AMSmath.js", "AMSsymbols.js", "color.js"]
+      }
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML' async></script>
+  </head>
+  <body>
+      <h1>Problema de Optimización Lineal</h1>
+      <h2>Teoría</h2>
+      <p>
+        La optimización lineal es una técnica que nos permite encontrar el valor óptimo (máximo o mínimo) de una función lineal, sujeta a un conjunto de restricciones lineales. Todas estas restricciones conformarán nuestra región factible. Tendremos que hallar los vértices que la delimitan, los cuales serán nuestros candidatos a óptimo. Esto se comprobará sustituyendo dichos vértices en la función objetivo. 
+      </p>
+      <p>
+        En un problema de optimización lineal, podemos formular la función objetivo y sus correspondientes restricciones de la siguiente manera, teniendo en cuenta que todas las funciones son lineales:
+      </p>
+      <p>
+        Sea una función objetivo \( f(x_1, x_2, \dots, x_n) \) que queremos maximizar o minimizar, sujeta a restricciones de la forma:
+      </p>
+      <ul>
+        <li> \( a_1x_1 + a_2x_2 + \dots + a_nx_n \leq b_1 \)</li>
+        <li> \( a_1x_1 + a_2x_2 + \dots + a_nx_n \geq b_2 \)</li>
+        <li> \( x_1, x_2, \dots, x_n \geq 0 \)</li>
+      </ul>
+      <p>
+        El objetivo es encontrar el conjunto de valores \( x_1, x_2, \dots, x_n \) que optimicen la función objetivo, es decir, maximicen o minimicen su valor, respetando todas las restricciones anteriores.
+La última restricción se debe a que tratamos con problemas donde las incógnitas son consideradas variables no negativas.
+      </p>
+ 
+      <h2>Ejemplo</h2>
+      <p>
+        En particular, vamos a desarollar el siguiente ejemplo, que realizaré con Geogebra:
+      </p>
+      <p>
+        Maximizar \( Z = 3x_1 + 4x_2 \)
+      </p>
+      <p>
+        Sujeto a:
+      </p>
+      <ul>
+        <li> \( 2x_1 + x_2 \leq 8 \)</li>
+        <li> \( x_1 + 2x_2 \leq 6 \)</li>
+        <li> \( x_1 \geq 0, x_2 \geq 0 \)</li>
+      </ul>
+      </p>
+      <p>
+      Pasos a seguir: 
+      <ul>
+        <li> Representamos cada una de las restricciones.</li>
+        <li> En cada una de las restricciones \( 2x_1 + x_2 \leq 8 \) y \( x_1 + 2x_2 \leq 6 \), debemos ver si nos quedamos con la parte de la izquierda o de la derecha. En ambas, hemos coloreado la parte de la izquierda, lo cual se comprueba fácilmente sustituyendo un punto de esta parte en la inecuación correspondiente. Está claro que el punto (0,0) satisface ambas restricciones, por lo que la parte en la que se encuentra este punto será con la que nos quedemos.</li>
+        <li> El siguiente paso es calcular los vértices que delimitan la región factible. Serán los puntos de intersección entre las distintas funciones. Esto significa que no calculo los puntos de intersección entre las inecuaciones, sino entre las igualdades. Hago uso del comando Intersect en Geogebra. Por ejemplo, \(B = Intersect(x+2y=6,x=0)\).</li>
+        <li> Por último, sustituyo estos puntos en la función objetivo para comprobar con cuál obtengo el valor máximo, puesto que estamos maximizando dicha función.</li>
+      </ul>
+      </p>
+
+      <h3>Gráfica</h3>
+      <p>
+        Esta es la representación gráfica de nuestro problema, donde podemos comprobar cuál es nuestra región factible: 
+      </p>
+      <img src="grafica_optimización.jpg" alt="Gráfica de optimización lineal" width="500">
+      <p>
+      Tras ello, sustituimos todos estos puntos en la función objetivo, con el fin de obtener el máximo valor. He escrito esta función objetivo en Geogebra, para sustituir los puntos A, B, C y D directamente.
+      <img src="grafica_optimización2.jpg" alt="Máximo" width="160">
+      <p>
+      El máximo se obtiene en el punto C. 
+    </section>
+
+    <footer>
+      <p>Ejercicio realizado por Patricia Navarro Martínez.</p>
+    </footer>
+  </body>
+</html>
