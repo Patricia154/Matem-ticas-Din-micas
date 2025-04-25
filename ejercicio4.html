@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método de la Bisección</title>
+</head>
+<body>
+    <h1>Método de la Bisección</h1>
+    <p>El método de la bisección es un algoritmo de búsqueda de raíces que trabaja dividiendo el intervalo a la mitad y seleccionando el subintervalo que tiene la raíz.</p>
+    <p>Establece que si una función continua cambia de signo en un intervalo [a, b], entonces existe al menos una raíz en dicho intervalo.</p>
+    
+    <h2>Implementación en JavaScript</h2>
+    <pre>
+function Biseccion(f,a,b,n) {
+if (f(a)*f(b)>=0) {
+console.log("No se puede aplicar el Método de Bisección en este intervalo.");
+return null;
+}
+    
+let puntomedio;
+for (let i=0;i&lt;n;i++) {
+puntomedio=(a + b)/2; 
+        
+if (f(puntomedio) === 0) {
+break;
+}
+        
+if (f(a)*f(puntomedio)<0) {
+b = puntomedio;
+} else {
+a = puntomedio;
+}
+}
+    
+return puntomedio; 
+}
+
+function ejemploFuncion(x) {
+return x**2-4;
+}
+ 
+console.log(Biseccion(ejemploFuncion,0,3,10));
+</pre>
+
+<script>
+function Biseccion(f,a,b,n) {
+if (f(a)*f(b)>=0) {
+console.log("No se puede aplicar el Método de Bisección en este intervalo.");
+return null;
+}
+    
+let puntomedio;
+for (let i=0;i<n;i++) {
+puntomedio=(a + b)/2; 
+         
+if (f(puntomedio) === 0) {
+break;
+}
+        
+if (f(a)*f(puntomedio)<0) {
+b = puntomedio;
+} else {
+a = puntomedio;
+}
+}
+    
+return puntomedio;
+}
+ 
+function ejemploFuncion(x) {
+return x**2-4;
+}
+ 
+console.log(Biseccion(ejemploFuncion,0,3,10));
+</script>
+
+<h3> Pasos a seguir en nuestro código</h3>
+<p> En primer lugar, comprobamos si existe un cambio de signo entre f(a) y f(b). En caso de que no se produzca, entonces no será un intervalo donde podamos aplicar el Método de Bisección.</p>
+<p> Tras ello, calculamos el punto medio del intervalo [a,b] que estamos considerando. Si evaluamos nuestra función en el punto medio y obtenemos como resultado cero, entonces ya tenemos nuestra raíz aproximada en el intervalo [a,b]. En caso de no ser así, tenemos en cuenta dos opciones:</p>
+<p>Vemos si existe un cambio de signo entre f(a) y f(puntomedio), o si existe cambio de signo entre f(puntomedio) y f(b). Si ocurre el primer caso, entonces tendremos el intervalo [a,puntomedio], por el contrario será [puntomedio,b]. Después de realizar n iteraciones (consiguiendo subintervalos), nos devolverá ese punto medio, que será la raíz de nuestra función en el intervalo de partida.</p>
+</body>
+</html>

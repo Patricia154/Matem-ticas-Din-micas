@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Línea Poligonal</title>
+<style>
+body {
+font-family: sans-serif;
+padding: 20px;
+}
+canvas {
+      border: 1px solid black;
+      display: block;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Dibuja una línea poligonal</h2>
+
+<canvas id="miCanvas" width="600" height="400" class="w3-border" onclick="agregaPunto(event)"></canvas>
+<div id="clickdiv">Haz click para empezar.</div>
+
+<br>
+
+<button onclick="borrarTodo()">🧹 Borrar todo</button>
+<label for="colorPicker">🎨 Color de línea:</label>
+<input type="color" id="colorPicker" value="#000000" onchange="cambiarColor(this.value)">
+<br><br>
+<button onclick="descargarImagen()">📥 Descargar imagen</button>
+
+<script>
+const puntos=[]; 
+const canvas=document.getElementById("miCanvas");
+const ctx=canvas.getContext("2d");
+ctx.strokeStyle = "#000000";
+
+function agregaPunto(event) {
+const rect=canvas.getBoundingClientRect();
+const x=event.clientX-rect.left;
+const y=event.clientY-rect.top;
+
+puntos.push({x,y});
+dibujarLinea();
+document.getElementById("clickdiv").innerText = "Coordenadas: x: " + x + " | y: " + y;
+}
+
+function dibujarLinea() {
+ctx.clearRect(0,0,canvas.width,canvas.height);
+if (puntos.length === 0) return;
+
+ctx.beginPath();
+ctx.moveTo(puntos[0].x, puntos[0].y);
+for (let i=1;i<puntos.length;i++) {
+ctx.lineTo(puntos[i].x, puntos[i].y);
+}
+ctx.stroke();
+}
+
+function borrarTodo() {
+puntos.length = 0;
+ctx.clearRect(0,0,canvas.width,canvas.height);
+document.getElementById("clickdiv").innerText = "Lienzo limpio. Haz click para comenzar de nuevo.";
+}
+
+function cambiarColor(nuevoColor) {
+ctx.strokeStyle = nuevoColor;
+dibujarLinea(); 
+}
+
+function descargarImagen() {
+const enlace = document.createElement('a');
+enlace.download = 'linea_poligonal.png';
+enlace.href = canvas.toDataURL('image/png');
+enlace.click();
+}
+
+</script>
+</body>
+</html>
