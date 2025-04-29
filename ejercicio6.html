@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Clase 6</title>
+<script src="https://algebra.js.org/javascripts/algebra-0.2.6.min.js"></script>
+<style>
+body {
+font-family: sans-serif;
+padding: 20px;
+}
+canvas {
+border: 1px solid black;
+display: block;
+margin-bottom: 10px;
+}
+.section { margin-bottom: 40px; }
+</style>
+</head>
+<body>
+
+<div class="section">
+<h2>1. Dibuja dos rectas y encuentra su punto de intersección</h2>
+<canvas id="miCanvas" width="600" height="400" onclick="agregarPuntoRecta(event)"></canvas>
+<div id="clickdiv">Haz 4 clicks: 2 puntos por cada recta.</div>
+<button onclick="borrarTodo()">🧹 Borrar todo</button>
+<div id="clickdiv"></div>
+</div>
+
+<script>
+const canvas = document.getElementById("miCanvas");
+const ctx = canvas.getContext("2d");
+
+let puntos=[];
+
+function agregarPuntoRecta(event) {
+const rect=canvas.getBoundingClientRect();
+const x=event.clientX-rect.left;
+const y=event.clientY-rect.top;
+puntos.push({x,y});
+
+ctx.beginPath();
+ctx.arc(x,y,3,0,2*Math.PI);
+ctx.fill();
+
+if (puntos.length===4) {
+dibujarRectasInterseccion();
+puntos=[];
+}
+}
+
+function dibujarRectasInterseccion() {
+const [p1,p2,p3,p4]=puntos;
+
+ctx.beginPath();
+ctx.moveTo(p1.x,p1.y);
+ctx.lineTo(p2.x,p2.y);
+ctx.strokeStyle="blue";
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(p3.x,p3.y);
+ctx.lineTo(p4.x,p4.y);
+ctx.strokeStyle="red";
+ctx.stroke();
+
+const interseccion = obtenerInterseccion(p1, p2, p3, p4);
+
+if (interseccion) {
+ctx.beginPath();
+ctx.arc(interseccion.x,interseccion.y,5,0,2*Math.PI);
+ctx.fillStyle="green";
+ctx.fill();
+} else {
+document.getElementById("clickdiv").innerText = "Las rectas no intersecan, son paralelas";
+}
+}
+
+function obtenerInterseccion(p1, p2, p3, p4) {
+const A1=p2.y-p1.y;
+const B1=p1.x-p2.x;
+const C1=A1*p1.x+B1*p1.y;
+
+const A2=p4.y-p3.y;
+const B2=p3.x-p4.x;
+const C2=A2*p3.x+B2*p3.y;
+
+const det=A1*B2-A2*B1;
+if (det===0) return null; 
+
+const x=(B2*C1-B1*C2)/det;
+const y=(A1*C2-A2*C1)/det;
+if (estaEnSegmento(p1,p2,x,y) && estaEnSegmento(p3,p4,x,y)) {
+return {x,y};
+}
+
+return null;
+}
+
+function estaEnSegmento(p1, p2, x, y) {
+const minX=Math.min(p1.x,p2.x);
+const maxX=Math.max(p1.x,p2.x);
+const minY=Math.min(p1.y,p2.y);
+const maxY=Math.max(p1.y,p2.y);
+
+return x>=minX && x<=maxX && y>=minY && y<=maxY;
+}
+
+function borrarTodo() {
+ctx.clearRect(0,0,canvas.width,canvas.height);
+puntos=[];
+document.getElementById("clickdiv").innerText = "Haz 4 clicks: 2 puntos por cada recta.";
+}
+</script>
+
+<div class="section">
+<h2>2.1. Teorema de la bisectriz</h2>
+
+<h3>Enunciado</h3>
+<p>En un triángulo ABC, si AD es la bisectriz del ángulo Â e interseca al lado BC en el punto D, entonces:</p>
+<p class="math">AB / AC = BD / DC</p>
+<p>Es decir, la bisectriz de un ángulo divide el lado opuesto en partes proporcionales a los lados adyacentes.</p>
+
+<h3>Demostración</h3>
+<h4>Caso de bisectriz interior que interseca el lado opuesto en D</h4>
+<p>Dado un triángulo ABC y una bisectriz AD, al construir el triángulo isósceles CDE, CD = CE, se tiene una semejanza entre los triángulos ABD y ACE, quedando así demostrada la relación de proporcionalidad de los triángulos iniciales:</p>
+<p class="math">AB / AC = BD / CE = BD / CD</p>
+<img src="imagen1.png" alt="Bisectriz interior">
+
+<h4>Caso de bisectriz exterior que interseca la prolongación del lado opuesto en D</h4>
+<p>Dado un triángulo ABC y una bisectriz AD del ángulo exterior en el vértice A, al construir un triángulo ADE igual al triángulo ADB se tiene la posición anterior para la bisectriz interior demostrada antes:</p>
+<p class="math">AB / AC = AE / AC = ED / CD = BD / CD</p>
+<img src="imagen2.png" alt="Bisectriz exterior">
+<p>Por tanto, queda probado el teorema para las dos bisectrices.</p>
+
+<div class="section">
+<h2>2.2 Teorema de Pitágoras</h2>
+
+<h3>Enunciado</h3>
+<p>
+En todo triángulo rectángulo, el <strong>cuadrado de la hipotenusa</strong> (el lado opuesto al ángulo recto) es igual a la <strong>suma de los cuadrados de los catetos</strong> (los otros dos lados).
+</p>
+<p>
+Fórmula: <strong>c<sup>2</sup> = a<sup>2</sup> + b<sup>2</sup></strong>
+</p>
+
+<h3>Demostración</h3>
+<p>
+Consideremos un triángulo rectángulo con catetos <em>a</em> y <em>b</em>, e hipotenusa <em>c</em>. Construimos un cuadrado grande de lado (a + b), dentro del cual colocamos cuatro copias del triángulo de modo que se forma un cuadrado más pequeño de lado <em>c</em> en el centro.
+</p>
+<p>
+El área total del cuadrado grande es:
+<br><strong>(a + b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup></strong>
+<br>También es igual al área del cuadrado pequeño (<em>c<sup>2</sup></em>) más el área de los cuatro triángulos:
+<br><strong>c<sup>2</sup> + 4((1/2)ab) = c<sup>2</sup> + 2ab</strong>
+</p>
+<p>
+Igualando ambas expresiones:
+<br><strong>a<sup>2</sup> + 2ab + b<sup>2</sup> = c<sup>2</sup> + 2ab</strong>
+<br>Restando 2ab a ambos lados:
+<br><strong>a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup></strong>
+</p>
+
+<p>Este resultado demuestra el Teorema de Pitágoras.</p>
+
+<p>Haz 2 clics para definir un segmento AB. Se generará automáticamente un triángulo rectángulo con ángulo recto en A.</p>
+<canvas id="pitagorasCanvas" width="600" height="400" style="border:1px solid black;" onclick="clickPitagoras(event)"></canvas>
+<div id="pitagorasResultado"></div>
+<button onclick="resetPitagorasCanvas()">Borrar todo</button>
+</div>
+
+<script>
+const pitagorasCanvas=document.getElementById("pitagorasCanvas");
+const pitagorasCtx=pitagorasCanvas.getContext("2d");
+let puntosPitagoras=[];
+
+function clickPitagoras(event) {
+const rect=pitagorasCanvas.getBoundingClientRect();
+const x=event.clientX-rect.left;
+const y=event.clientY-rect.top;
+puntosPitagoras.push({x,y});
+
+pitagorasCtx.beginPath();
+pitagorasCtx.arc(x,y,3,0,2*Math.PI);
+pitagorasCtx.fill();
+
+if (puntosPitagoras.length===2) {
+const [A,B]=puntosPitagoras;
+
+// Vector AB
+const dx=B.x-A.x;
+const dy=B.y-A.y;
+
+// Vector perpendicular
+const C = {
+x:A.x-dy,
+y:A.y+dx
+};
+
+// Dibujo triángulo
+drawLine(A,B,"blue");
+drawLine(A,C,"green");
+drawLine(B,C,"red");
+
+const AB=distancia(A,B);
+const AC=distancia(A,C);
+const BC=distancia(B,C);
+
+const cat1=AB;
+const cat2=AC;
+const hip=BC;
+
+const c2=(cat1**2+cat2**2).toFixed(2);
+const h2=(hip**2).toFixed(2);
+const cumple=Math.abs(c2 - h2) < 0.1;
+
+document.getElementById("pitagorasResultado").innerText = cumple
+? `✅ Se cumple: c² = a² + b² → ${h2} ≈ ${c2}`
+: `❌ No se cumple: c² = ${h2}, a² + b² = ${c2}`;
+
+puntosPitagoras=[];
+}
+}
+
+function drawLine(p1,p2,color="black") {
+pitagorasCtx.beginPath();
+pitagorasCtx.moveTo(p1.x,p1.y);
+pitagorasCtx.lineTo(p2.x,p2.y);
+pitagorasCtx.strokeStyle=color;
+pitagorasCtx.stroke();
+}
+
+function distancia(p1,p2) {
+return Math.hypot(p1.x-p2.x,p1.y-p2.y);
+}
+
+function resetPitagorasCanvas() {
+pitagorasCtx.clearRect(0,0,pitagorasCanvas.width,pitagorasCanvas.height);
+puntosPitagoras=[];
+document.getElementById("pitagorasResultado").innerText = "";
+}
+</script>
+
+<div class="section">
+  <h2>3. Punto medio y distancia</h2>
+  <p>Haz 3 clicks: los dos primeros definen una recta, el tercero será el punto al que se medirá la distancia desde el punto medio.</p>
+  <canvas id="pmCanvas" width="600" height="400" onclick="clickPuntoMedio(event)"></canvas>
+  <button onclick="resetPMCanvas()">Borrar todo</button>
+  <div id="pmResultado"></div>
+</div>
+
+<script>
+const pmCanvas=document.getElementById("pmCanvas");
+const pmCtx=pmCanvas.getContext("2d");
+let puntosPM=[];
+
+function clickPuntoMedio(event) {
+const rect=pmCanvas.getBoundingClientRect();
+const x=event.clientX-rect.left;
+const y=event.clientY-rect.top;
+puntosPM.push({x,y});
+pmCtx.beginPath();
+pmCtx.arc(x,y,3,0,2*Math.PI);
+pmCtx.fill();
+
+if (puntosPM.length === 3) {
+const [p1,p2,p3] = puntosPM;
+
+pmCtx.beginPath();
+pmCtx.moveTo(p1.x,p1.y);
+pmCtx.lineTo(p2.x,p2.y);
+pmCtx.strokeStyle="blue";
+pmCtx.stroke();
+
+const pmx=(p1.x+p2.x)/2;
+const pmy=(p1.y+p2.y)/2;
+
+pmCtx.beginPath();
+pmCtx.arc(pmx,pmy,4,0,2*Math.PI);
+pmCtx.fillStyle="green";
+pmCtx.fill();
+
+pmCtx.beginPath();
+pmCtx.moveTo(pmx,pmy);
+pmCtx.lineTo(p3.x,p3.y);
+pmCtx.strokeStyle="orange";
+pmCtx.stroke();
+
+const dx=p3.x-pmx;
+const dy=p3.y-pmy;
+const distancia=Math.sqrt(dx*dx+dy*dy);
+
+document.getElementById("pmResultado").innerText =`Punto medio: (${pmx.toFixed(2)}, ${pmy.toFixed(2)}), Distancia al tercer punto: ${distancia.toFixed(2)}`;
+}
+}
+
+function resetPMCanvas() {
+pmCtx.clearRect(0,0,pmCanvas.width,pmCanvas.height);
+puntosPM=[];
+document.getElementById("pmResultado").innerText = "";
+}
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
